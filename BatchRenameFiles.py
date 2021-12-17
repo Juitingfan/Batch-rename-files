@@ -4,12 +4,17 @@ import tkinter.font as tkFont
 import os
  
 def renameFiles():
-    #讀取輸入的標題並去除空字串
+    #讀取輸入的標題並去除空字串，去除不可做為檔名的符號
     titleList=(title_entry.get('1.0', END))
     titleList=titleList.split('\n')
     for j in titleList:
         if j=='':
             titleList.remove(j)
+    errorSymbol=['<','>',':','"','/','\\','|','?','*']
+    for e in errorSymbol:
+        for g in range(len(titleList)):
+            if e in titleList[g]:
+                titleList[g]=titleList[g].replace(e,'')
  
     #讀取路徑與目標資料夾檔案名稱
     loc=(path_entry.get())
@@ -48,13 +53,18 @@ def renameFiles():
 window=tk.Tk()
 fontStyle = tkFont.Font(size=12)
  
-window.title('檔名修改工具')
-window.geometry('400x400')
+window.title('批次檔名修改工具v1.0')
+window.geometry('400x420')
 window.resizable(0,0)
 window.configure(background='#e7e7e7')
+
+ref_frame = tk.Frame(window,bg='#e7e7e7')
+ref_frame.pack(side=tk.TOP,padx=20, pady=8,ipadx=140)
+ref_label1=tk.Label(ref_frame, text='修改範例: 1205_cutout_00001.tga >> 1205_cutout_標題文字.tga',bg='#e7e7e7')
+ref_label1.pack(anchor=tk.NW)
  
 path_frame = tk.Frame(window,bg='#e7e7e7')
-path_frame.pack(side=tk.TOP,padx=20, pady=9,ipadx=140)
+path_frame.pack(side=tk.TOP,padx=20,ipadx=140)
 path_label1=tk.Label(path_frame, text='輸入檔案所在路徑',font=fontStyle,bg='#e7e7e7')
 path_label1.pack(anchor=tk.NW)
 path_entry=tk.Entry(path_frame,width=50,font=fontStyle)
@@ -71,7 +81,7 @@ btn=tk.Button(window,text='開始', font=fontStyle, command=renameFiles)
 btn.pack(padx=20, pady=5,ipadx=50, ipady=2)
  
 result_frame=tk.Frame(window,bg='black')
-result_frame.pack(side=tk.TOP,ipadx=200, ipady=5)
+result_frame.pack(side=tk.BOTTOM,ipadx=200, ipady=5)
 result_labelL=tk.Label(result_frame,text='運行結果:',font=fontStyle,bg="black", fg="white")
 result_labelL.pack(side=tk.LEFT,padx=10)
 result_label=tk.Label(result_frame,font=fontStyle,bg="black", fg="white")
